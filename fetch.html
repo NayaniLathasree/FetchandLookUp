@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fetch and LookUp</title>
+    <style>
+    	* { font: 17px Calibri; }
+    </style>
+</head>
+<body>
+    
+    <select id="sel" onchange="show(this)">
+      <option value="">-- Select --</option>
+      <img id="img"/>
+    </select>
+    <button onclick="fetchData()" >Load</button>
+    <p id="demo"></p>
+    <p id="msg"></p>
+</body>
+
+<script>
+    window.onload = populateSelect();
+
+    function populateSelect() {
+
+        // Create XMLHttpRequest object, with GET method.
+        let xhr = new XMLHttpRequest(), 
+            method = 'GET',
+            overrideMimeType = 'application/json',
+            url = 'data.json';  // Add the file URL.
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+
+          let ship = JSON.parse(xhr.responseText);
+          let option ;
+         let ele = document.getElementById('sel');
+
+          for (let i = 0; i < ship.length; i++) {
+            const mission = ship[i].missions
+            
+            console.log(mission);
+            const img = ship[i].image
+            ele.innerHTML = ele.innerHTML +'<option value="' + ship[i].ship_type + '">' + ship[i].ship_name + '">'+ img+'</option>' 
+              ;
+          }
+        }
+      };
+      xhr.open(method, url, true);
+      xhr.send();
+    }
+
+    function show(ele) {
+        var msg = document.getElementById('msg');
+        msg.innerHTML = 'Ship Name: <b>' + ele.options[ele.selectedIndex].text + '</b> </br>' +
+            'ship Type: <b> ' + ele.value   ;
+    }
+
+    function fetchData(){
+    fetch('./button.json').then(res=>{
+        return res.json()
+    }).then(data =>{
+        console.log(data,"data");
+             document.getElementById('demo').innerHTML =`<p >${data }<p>`
+                }).catch(err =>{
+      console.log(err);
+    })
+}
+</script>
+</html>
