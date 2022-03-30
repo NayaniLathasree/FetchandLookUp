@@ -3,18 +3,39 @@
 <head>
     <title>Fetch and LookUp</title>
     <style>
-    	* { font: 17px Calibri; }
+    	* { font: 17px Calibri; text-align: justify ; }
+      #demo{
+        position: absolute;
+    margin-top: -47px;
+    margin-left: -58%;
+      }
+      #msg{
+        text-align: right;
+      }
+      #div{
+        position: absolute;
+    margin-top: 31px;
+    margin-left: 50%;
+      }
+      #btn{
+        display: flex;
+        margin-top: 31px;
+      }
     </style>
 </head>
 <body>
-    
+  <div id="div">
+
     <select id="sel" onchange="show(this)">
       <option value="">-- Select --</option>
-      <img id="img"/>
     </select>
-    <button onclick="fetchData()" >Load</button>
-    <p id="demo"></p>
     <p id="msg"></p>
+    <div id="demo">
+      
+    </div>
+    <button onclick="fetchData()" id="data">Load</button>
+    <p id="btn"></p>
+  </div>
 </body>
 
 <script>
@@ -22,11 +43,10 @@
 
     function populateSelect() {
 
-        // Create XMLHttpRequest object, with GET method.
         let xhr = new XMLHttpRequest(), 
             method = 'GET',
             overrideMimeType = 'application/json',
-            url = 'data.json';  // Add the file URL.
+            url = 'data.json'; 
 
       xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
@@ -34,13 +54,14 @@
           let ship = JSON.parse(xhr.responseText);
           let option ;
          let ele = document.getElementById('sel');
-
           for (let i = 0; i < ship.length; i++) {
             const mission = ship[i].missions
-            
             console.log(mission);
-            const img = ship[i].image
-            ele.innerHTML = ele.innerHTML +'<option value="' + ship[i].ship_type + '">' + ship[i].ship_name + '">'+ img+'</option>' 
+            const img = ship[i].image 
+            console.log(img);
+         
+            // p.innerHTML = p.innerHTML  + `<img scr = ${ship[i].image} id="'+ ${ship[i].image}+'" alt = "Ship Image"/>`-
+            ele.innerHTML = ele.innerHTML +'<option value="' + ship[i].ship_type + '" id="' +ship[i].ship_name+' ">' +ship[i].ship_name+'</option>' 
               ;
           }
         }
@@ -48,11 +69,14 @@
       xhr.open(method, url, true);
       xhr.send();
     }
-
+ 
     function show(ele) {
-        var msg = document.getElementById('msg');
-        msg.innerHTML = 'Ship Name: <b>' + ele.options[ele.selectedIndex].text + '</b> </br>' +
-            'ship Type: <b> ' + ele.value   ;
+        let msg = document.getElementById('msg');
+        msg.innerHTML = 'Ship Name: <b>' + ele.options[ele.selectedIndex].text  + '</b> </br>' +
+            'ship Type: <b> ' + ele.value  +'</b> </br>' +'Mission : <b>' + ele.id ;
+        let img = document.getElementById('demo')
+        img.innerHTML = `<img src = ${img.src} alt="Ship Image"/>`
+      
     }
 
     function fetchData(){
@@ -60,7 +84,7 @@
         return res.json()
     }).then(data =>{
         console.log(data,"data");
-             document.getElementById('demo').innerHTML =`<p >${data }<p>`
+             document.getElementById('btn').innerHTML =`<p >${data }<p>`
                 }).catch(err =>{
       console.log(err);
     })
