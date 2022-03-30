@@ -19,7 +19,7 @@
 <body>
   <div id="div">
 
-    <select id="sel" onchange="show(this)">
+    <select id="sel" onchange="show(this)" >
       <option value="">-- Select --</option>
     </select>
     <p id="msg"></p>
@@ -32,40 +32,26 @@
 
 <script>
     window.onload = populateSelect();
-
-    function populateSelect() {
-
-        let xhr = new XMLHttpRequest(), 
-            method = 'GET',
-            overrideMimeType = 'application/json',
-            url = 'data.json'; 
-
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-
-          let ship = JSON.parse(xhr.responseText);
-          let option ;
+function populateSelect(){
+      fetch('./data.json').then((res)=>res.json()).then((ship)=>{
+    
          let ele = document.getElementById('sel');
           for (let i = 0; i < ship.length; i++) {
             const mission = ship[i].missions
             console.log(mission);
             const img = ship[i].image 
             console.log(img);
-         
-            // p.innerHTML = p.innerHTML  + `<img scr = ${ship[i].image} id="'+ ${ship[i].image}+'" alt = "Ship Image"/>`-
-            ele.innerHTML = ele.innerHTML +'<option value="' + ship[i].ship_type + '" id="' +ship[i].ship_name+' ">' +ship[i].ship_name+'</option>' 
-              ;
-          }
-        }
-      };
-      xhr.open(method, url, true);
-      xhr.send();
-    }
- 
+            
+           ele.innerHTML = ele.innerHTML +'<option value="' + ship[i].ship_type + '" name="' +ship[i].ship_name+' ">' +ship[i].ship_name+'</option>' 
+               }    
+              });
+ }
+
+
     function show(ele) {
         let msg = document.getElementById('msg');
         msg.innerHTML = 'Ship Name: <b>' + ele.options[ele.selectedIndex].text  + '</b> </br>' +
-            'ship Type: <b> ' + ele.value  +'</b> </br>' +'Mission : <b>' + ele.id ;
+            'ship Type: <b> ' + ele.value  +'</b> </br>' +'Mission : <b>' + ele.name ;
         let img = document.getElementById('demo')
         img.innerHTML = `<img src = ${img.src} alt="Ship Image"/>`
       
